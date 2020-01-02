@@ -26,19 +26,19 @@ run(InputFile,OutputFile):-
 
 parse(-ParseTree)--> block.
 
-block(block(symbol_code(123), ST, symbol_code(125)))-->[symbol_code(123)], stmts(ST), [symbol_code(125)].
+block(block(left_curly, ST, right_curly))-->[symbol_code(123)], stmts(ST), [symbol_code(125)].
 stmts(statements(AS, ST))-->assign(AS), stmts(ST).
 stmts(statements)-->[].
-assign(assign(ID, symbol_code(61), EX, symbol_code(59)))-->id(ID), [symbol_code(61)], expr(EX), [symbol_code(59)].
-expr(expression(T, symbol_code(43), EX))-->term(T), [symbol_code(43)], expr(EX).
-expr(expression(T, symbol_code(45) EX))-->term(T), [symbol_code(45)], expr(EX).
+assign(assignment(ID, assign_op, EX, semicolon))-->id(ID), [symbol_code(61)], expr(EX), [symbol_code(59)].
+expr(expression(T, add_op, EX))-->term(T), [symbol_code(43)], expr(EX).
+expr(expression(T, sub_op, EX))-->term(T), [symbol_code(45)], expr(EX).
 expr(expression(T))-->term(T).
-term(term(F, symbol_code(42), T))-->factor(F), [symbol_code(42)], term(T).
-term(term(F, symbol_code(47), T))-->factor(F), [symbol_code(47)], term(T).
+term(term(F, mult_op, T))-->factor(F), [symbol_code(42)], term(T).
+term(term(F, div_op, T))-->factor(F), [symbol_code(47)], term(T).
 term(term(F))-->factor(F).
 factor(factor(I))-->int(I).
 factor(factor(I))-->id(I).
-factor(factor(symbol_code(40), EX, symbol_code(41)))-->[symbol_code(40)], expr(EX), [symbol_code(41)].
+factor(factor(left_paren, EX, right_paren))-->[symbol_code(40)], expr(EX), [symbol_code(41)].
 
 id(id(X))-->[X], {atom(X)}.
 int(int(X))-->[X], {integer(X)}.
