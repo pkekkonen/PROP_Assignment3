@@ -28,6 +28,23 @@ parse(-ParseTree)-->
 ***/
 
 /* WRITE YOUR CODE FOR THE PARSER HERE */
+block-->[symbol_code(123)], stmts, [symbol_code(125)].
+stmts-->assign, stmts.
+stmts-->().
+assign-->id, [symbol_code(61)], expr, symbol_code(59).
+expr-->term, [symbol_code(43)], expr.
+expr-->term, [symbol_code(45)], expr. 
+expr-->term.
+term-->factor, [symbol_code(42)], term.
+term-->factor, [symbol_code(47)], term.
+term-->factor.                     ]
+factor-->int.
+factor-->id.
+factor-->[symbol_code(40)], expr, [symbol_code(41)]. 
+
+id-->[X], {string(X)}.
+int-->[X], {integer(X)}.
+
 	
 /***
 evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
