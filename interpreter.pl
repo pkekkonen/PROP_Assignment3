@@ -14,6 +14,7 @@ Load the tokenizer (tokenize/2) and the filewriter (write_to_file/3).
 The top level predicate run/2 of the solution.
 To be called like this:
 ?- run('/Users/paulinakekkonen/Documents/Github/PROP_Assignment3/program2.txt','/Users/paulinakekkonen/Documents/Github/PROP_Assignment3/myparsetree2.txt').
+***/
 
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
@@ -23,21 +24,21 @@ run(InputFile,OutputFile):-
 
 /* WRITE YOUR CODE FOR THE PARSER HERE */
 
-parse(ParseTree(bl))--> block(bl).
+parse(-ParseTree)--> block.
 
-block(Block(symbol_code(123), st, symbol_code(125)))-->[symbol_code(123)], stmts(st), [symbol_code(125)].
-stmts(statements(as, st))-->assign(as), stmts(st).
+block(block(symbol_code(123), ST, symbol_code(125)))-->[symbol_code(123)], stmts(ST), [symbol_code(125)].
+stmts(statements(AS, ST))-->assign(AS), stmts(ST).
 stmts(statements)-->[].
-assign(assign(i, symbol_code(61), ex symbol_code(59)))-->id(i), [symbol_code(61)], expr(ex), [symbol_code(59)].
-expr(expression(t, symbol_code(43), ex))-->term(t), [symbol_code(43)], expr(ex).
-expr(expression(t, symbol_code(45) ex))-->term(t), [symbol_code(45)], expr(ex).
-expr(expression(t))-->term(t).
-term(term(f, symbol_code(42), t))-->factor(f), [symbol_code(42)], term(t).
-term(term(f, symbol_code(47), t))-->factor(f), [symbol_code(47)], term(t).
-term(term(f))-->factor(f).
-factor(factor(i))-->int(i).
-factor(factor(i))-->id(i).
-factor(factor(symbol_code(40), ex, symbol_code(41)))-->[symbol_code(40)], expr(ex), [symbol_code(41)].
+assign(assign(ID, symbol_code(61), EX, symbol_code(59)))-->id(ID), [symbol_code(61)], expr(EX), [symbol_code(59)].
+expr(expression(T, symbol_code(43), EX))-->term(T), [symbol_code(43)], expr(EX).
+expr(expression(T, symbol_code(45) EX))-->term(T), [symbol_code(45)], expr(EX).
+expr(expression(T))-->term(T).
+term(term(F, symbol_code(42), T))-->factor(F), [symbol_code(42)], term(T).
+term(term(F, symbol_code(47), T))-->factor(F), [symbol_code(47)], term(T).
+term(term(F))-->factor(F).
+factor(factor(I))-->int(I).
+factor(factor(I))-->id(I).
+factor(factor(symbol_code(40), EX, symbol_code(41)))-->[symbol_code(40)], expr(EX), [symbol_code(41)].
 
 id(id(X))-->[X], {atom(X)}.
 int(int(X))-->[X], {integer(X)}.
