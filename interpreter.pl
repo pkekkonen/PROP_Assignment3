@@ -19,7 +19,7 @@ To be called like this:
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
 	parse(ParseTree, Program, []),
-	evaluate(ParseTree,[],VariablesOut),
+	evaluate(ParseTree,[],VariablesOut), 
 	write_to_file(OutputFile,ParseTree,VariablesOut).
 
 /* WRITE YOUR CODE FOR THE PARSER HERE */
@@ -41,8 +41,8 @@ factor(factor(I))-->integer(I).
 factor(factor(I))-->id(I).
 factor(factor(left_paren, EX, right_paren))-->['('], expr(EX), [')'].
 
-id(id(X))-->[X], {atom(X)}.
-integer(integer(X))-->[X], {integer(X)}.
+id(ident(X))-->[X], {atom(X)}.
+integer(int(X))-->[X], {integer(X)}.
 
 
 	
@@ -53,4 +53,6 @@ evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
 	the form [var = value, ...].
 ***/
 
-/* WRITE YOUR CODE FOR THE EVALUATOR HERE */
+evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
+
+	
