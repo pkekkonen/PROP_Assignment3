@@ -4,7 +4,7 @@ Peter Idestam-Almquist, 2019-12-09.
 ***/
 
 /*** 
-Load the tokenizer (tokenize/2) and the file_writer (write_to_file/3).
+Load the tokenizer (tokenize/2) and the filewriter (write_to_file/3).
 ***/
 :- [tokenizer].
 :- [filewriter].
@@ -14,7 +14,7 @@ Load the tokenizer (tokenize/2) and the file_writer (write_to_file/3).
 The top level predicate run/2 of the solution.
 To be called like this:
 ?- run('/Users/paulinakekkonen/Documents/Github/PROP_Assignment3/program2.txt','/Users/paulinakekkonen/Documents/Github/PROP_Assignment3/myparsetree2.txt').
-***/
+
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
 	parse(ParseTree, Program, []),
@@ -39,8 +39,9 @@ factor(factor(i))-->int(i).
 factor(factor(i))-->id(i).
 factor(factor(symbol_code(40), ex, symbol_code(41)))-->[symbol_code(40)], expr(ex), [symbol_code(41)].
 
-id(id(X))-->[X], {string(X)}.
+id(id(X))-->[X], {atom(X)}.
 int(int(X))-->[X], {integer(X)}.
+
 
 	
 /***
