@@ -4,16 +4,16 @@ Peter Idestam-Almquist, 2019-12-09.
 ***/
 
 /*** 
-Load the tokenizer (tokenize/2) and the file_writer (write_to_file/3).
+Load the tokenizer (tokenize/2) and the filewriter (write_to_file/3).
 ***/
 :- [tokenizer].
-:- [file_writer].
+:- [filewriter].
 
 
 /***
 The top level predicate run/2 of the solution.
 To be called like this:
-?- run('program1.txt','myparsetree1.txt').
+?- run('program2.txt','myparsetree2.txt').
 ***/
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
@@ -30,19 +30,19 @@ parse(-ParseTree)-->
 /* WRITE YOUR CODE FOR THE PARSER HERE */
 block-->[symbol_code(123)], stmts, [symbol_code(125)].
 stmts-->assign, stmts.
-stmts-->().
+stmts-->[].
 assign-->id, [symbol_code(61)], expr, symbol_code(59).
 expr-->term, [symbol_code(43)], expr.
 expr-->term, [symbol_code(45)], expr. 
 expr-->term.
 term-->factor, [symbol_code(42)], term.
 term-->factor, [symbol_code(47)], term.
-term-->factor.                     ]
+term-->factor.                    
 factor-->int.
 factor-->id.
 factor-->[symbol_code(40)], expr, [symbol_code(41)]. 
 
-id-->[X], {string(X)}.
+id-->[X], {atom(X)}.
 int-->[X], {integer(X)}.
 
 	
