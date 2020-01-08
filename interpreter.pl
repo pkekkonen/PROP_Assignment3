@@ -19,7 +19,7 @@ To be called like this:
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
 	parse(ParseTree, Program, []),
-	evaluate(ParseTree,[],VariablesOut), 
+	/*evaluate(ParseTree,[],VariablesOut), */
 	write_to_file(OutputFile,ParseTree,VariablesOut).
 
 /* WRITE YOUR CODE FOR THE PARSER HERE */
@@ -53,6 +53,16 @@ evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
 	the form [var = value, ...].
 ***/
 
-evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
+evaluate(+parse_tree(BL),+VariablesIn,-VariablesOut):-
+    evaluate(BL, VariablesIn, Result),
+    VariablesOut is Result.
+
+evaluate(block(left_curly, ST, right_curly), VariablesIn, VariablesOut) :-
+    evaluate(ST, VariablesIn, Result),
+    VariablesOut is Result.
+
+evaluate(statements(AS, ST), VariablesIn, VariablesOut) :-
+    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2),
+
 
 	
