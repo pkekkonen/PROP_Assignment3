@@ -19,7 +19,7 @@ To be called like this:
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
 	parse(ParseTree, Program, []),
-	/*evaluate(ParseTree,[],VariablesOut), */
+	evaluate(ParseTree,[],VariablesOut),
 	write_to_file(OutputFile,ParseTree,VariablesOut).
 
 /* WRITE YOUR CODE FOR THE PARSER HERE */
@@ -53,7 +53,7 @@ evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
 	the form [var = value, ...].
 ***/
 
-evaluate(+parse_tree(BL),+VariablesIn,-VariablesOut):-
+evaluate(parse_tree(BL),VariablesIn,VariablesOut):-
     evaluate(BL, VariablesIn, Result),
     VariablesOut is Result.
 
@@ -62,12 +62,12 @@ evaluate(block(left_curly, ST, right_curly), VariablesIn, VariablesOut) :-
     VariablesOut is Result.
 
 evaluate(statements(AS, ST), VariablesIn, VariablesOut) :-
-    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2), VariableOut is [R1|R2].
+    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2), VariableOut is [R1|R2], VariablesIn is VariablesOut.
 
 evaluate(statements, VariablesIn, VariablesOut).
 
 evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
-    evaluate(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 = R2. /* make pair? */
+    evaluate(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), built_equality_structure(R1, R2, VariablesOut).
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 + R2.
@@ -100,8 +100,9 @@ evaluate(ident(X), VariablesIn, VariablesOut) :-
     VariablesOut is X.
 
 evaluate(int(X), VariablesIn, VariablesOut) :-
-VariablesOut is X.
+    VariablesOut is X.
 
+built_equality_structure(Id,Value,Id = Value).
 
 
 
