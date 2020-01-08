@@ -55,14 +55,14 @@ evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
 
 evaluate(parse_tree(BL),VariablesIn,VariablesOut):-
     evaluate(BL, VariablesIn, Result),
-    VariablesOut is Result.
+    VariablesOut = Result.
 
 evaluate(block(left_curly, ST, right_curly), VariablesIn, VariablesOut) :-
     evaluate(ST, VariablesIn, Result),
-    VariablesOut is Result.
+    VariablesOut = Result.
 
 evaluate(statements(AS, ST), VariablesIn, VariablesOut) :-
-    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2), VariableOut is [R1|R2], VariablesIn is VariablesOut.
+    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2), VariablesOut = [R1|R2].
 
 evaluate(statements, VariablesIn, VariablesOut).
 
@@ -70,19 +70,19 @@ evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
     evaluate(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), built_equality_structure(R1, R2, VariablesOut).
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
-    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 + R2.
+    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut = R1 + R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
-    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
+    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut = R1 - R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), VariablesOut = R1.
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
-    evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
+    evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut = R1*R2.
 
 evaluate(term(F, div_op, T), VariablesIn, VariablesOut) :-
-    evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1/R2.
+    evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut = R1/R2.
 
 evaluate(term(F), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), VariablesOut = R1.
@@ -91,22 +91,22 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, R1), VariablesOut = R1.
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-    evaluate(IDENT, VariablesIn, R1), VariablesOut is R1.
+    evaluate(IDENT, VariablesIn, R1), VariablesOut = R1.
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, R1), VariablesOut = R1.
 
 evaluate(ident(X), VariablesIn, VariablesOut) :-
-    built_ident_structure(X, VariablesOut).
+    VariablesOut = X.
 
 evaluate(int(X), VariablesIn, VariablesOut) :-
-    built_ident_structure(X, VariablesOut).
+    VariablesOut = X.
 
 built_equality_structure(Id,Value,Id = Value).
 
 
 built_ident_structure(Ident, IdentOut).
-built_id_structure(Id, IdOut). /*KOM PÅ bättre namn*/
+built_int_structure(Int, IdOut). /*KOM PÅ bättre namn*/
 
 
 
