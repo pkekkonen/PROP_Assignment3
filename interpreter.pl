@@ -76,7 +76,7 @@ evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
-    evaluate(T, VariablesIn, R1), VariablesOut is R1.
+    evaluate(T, VariablesIn, R1), VariablesOut = R1.
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
@@ -85,16 +85,16 @@ evaluate(term(F, div_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1/R2.
 
 evaluate(term(F), VariablesIn, VariablesOut) :-
-    evaluate(F, VariablesIn, R1), VariablesOut is R1.
+    evaluate(F, VariablesIn, R1), VariablesOut = R1.
 
-evaluate(factor(INT) VariablesIn, VariablesOut) :-
-    evaluate(INT, VariablesIn, R1), VariablesOut is R1.
+evaluate(factor(INT), VariablesIn, VariablesOut) :-
+    evaluate(INT, VariablesIn, R1), VariablesOut = R1.
 
-evaluate(factor(IDENT) VariablesIn, VariablesOut) :-
+evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
     evaluate(IDENT, VariablesIn, R1), VariablesOut is R1.
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
-    evaluate(EX, VariablesIn, R1), VariablesOut is R1.
+    evaluate(EX, VariablesIn, R1), VariablesOut = R1.
 
 evaluate(ident(X), VariablesIn, VariablesOut) :-
     built_ident_structure(X, VariablesOut).
