@@ -97,14 +97,16 @@ evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, R1), VariablesOut is R1.
 
 evaluate(ident(X), VariablesIn, VariablesOut) :-
-    VariablesOut is X.
+    built_ident_structure(X, VariablesOut).
 
 evaluate(int(X), VariablesIn, VariablesOut) :-
-    VariablesOut is X.
+    built_ident_structure(X, VariablesOut).
 
 built_equality_structure(Id,Value,Id = Value).
 
 
+built_ident_structure(Ident, IdentOut).
+built_id_structure(Id, IdOut). /*KOM PÅ bättre namn*/
 
 
 
