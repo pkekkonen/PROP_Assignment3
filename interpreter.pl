@@ -37,8 +37,8 @@ expr(expression(T))-->term(T).
 term(term(F, mult_op, T))-->factor(F), [*], term(T).
 term(term(F, div_op, T))-->factor(F), [/], term(T).
 term(term(F))-->factor(F).
-factor(factor(I))-->integer(I).
-factor(factor(I))-->id(I).
+factor(factor(INT))-->integer(INT).
+factor(factor(IDENT))-->id(IDENT).
 factor(factor(left_paren, EX, right_paren))-->['('], expr(EX), [')'].
 
 id(ident(X))-->[X], {atom(X)}.
@@ -62,7 +62,58 @@ evaluate(block(left_curly, ST, right_curly), VariablesIn, VariablesOut) :-
     VariablesOut is Result.
 
 evaluate(statements(AS, ST), VariablesIn, VariablesOut) :-
-    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2),
+    evaluate(AS,VariablesIn, R1), evaluate(ST, VariablesIn, R2), VariableOut is [R1|R2].
+
+evaluate(statements, VariablesIn, VariablesOut).
+
+evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
+    evaluate(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 = R2. /* make pair? */
+
+evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
+    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 + R2.
+
+evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
+    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
+
+evaluate(expression(T), VariablesIn, VariablesOut) :-
+    evaluate(T, VariablesIn, R1), VariablesOut is R1 + R2.
+
+evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
+    evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
+
+evaluate(term(F, div_op, T), VariablesIn, VariablesOut) :-
+    evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1/R2.
+
+evaluate(term(F), VariablesIn, VariablesOut) :-
+    evaluate(F, VariablesIn, R1), VariablesOut is R1.
+
+evaluate(factor(INT) VariablesIn, VariablesOut) :-
+    evaluate(INT, VariablesIn, R1), VariablesOut is R1.
+
+evaluate(factor(IDENT) VariablesIn, VariablesOut) :-
+    evaluate(IDENT, VariablesIn, R1), VariablesOut is R1.
+
+evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
+    evaluate(EX, VariablesIn, R1), VariablesOut is R1.
+
+evaluate(ident(X), VariablesIn, VariablesOut) :-
+    VariablesOut is X.
+
+evaluate(int(X), VariablesIn, VariablesOut) :-
+VariablesOut is X.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	
