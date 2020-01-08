@@ -76,7 +76,7 @@ evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
-    evaluate(T, VariablesIn, R1), VariablesOut is R1 + R2.
+    evaluate(T, VariablesIn, R1), VariablesOut is R1.
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
