@@ -25,9 +25,8 @@ run(InputFile,OutputFile):-
 /* WRITE YOUR CODE FOR THE PARSER HERE */
 
 
-parse(parse_tree(BL))--> block(BL).
 
-block(block(left_curly, ST, right_curly))-->['{'], stmts(ST), ['}'].
+parse(block(left_curly, ST, right_curly))-->['{'], stmts(ST), ['}'].
 stmts(statements(AS, ST))-->assign(AS), stmts(ST).
 stmts(statements) --> [].
 assign(assignment(ID, assign_op, EX, semicolon))-->id(ID), [=], expr(EX), [;].
@@ -52,10 +51,6 @@ evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
 	after evaluation as a list of variables and their values in 
 	the form [var = value, ...].
 ***/
-
-evaluate(parse_tree(BL),VariablesIn,VariablesOut):-
-    evaluate(BL, VariablesIn, Result),
-    VariablesOut = Result.
 
 evaluate(block(left_curly, ST, right_curly), VariablesIn, VariablesOut) :-
     evaluate(ST, VariablesIn, Result),
