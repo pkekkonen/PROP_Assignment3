@@ -68,7 +68,8 @@ evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1), VariablesOut is R2.
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut, ValueSoFar) :-
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1,evaluate(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2.
+    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluateAdd(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2;
+    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2), VariablesOut is R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1), VariablesOut is R2.
@@ -83,7 +84,8 @@ evaluate(expression(T), VariablesIn, VariablesOut) :-
 evaluateSub(expression(T), VariablesIn, VariablesOut, ValueSoFar) :-
    evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar-Res.
 
-
+evaluateAdd(expression(T), VariablesIn, VariablesOut, ValueSoFar) :-
+    evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar+Res.
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
