@@ -65,18 +65,20 @@ evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
     evaluatear(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), built_equality_structure(R1, R2, VariablesOut).
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
+    evaluate(T, VariablesIn, R1), evaluateAdd(EX, VariablesIn, R2, R1), VariablesOut is R2;
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1), VariablesOut is R2.
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut, ValueSoFar) :-
     evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluateAdd(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2;
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2), VariablesOut is R2.
+    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
+    evaluate(T, VariablesIn, R1), evaluateSub(EX, VariablesIn, R2, R1), VariablesOut is R2;
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1), VariablesOut is R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut, ValueSoFar) :-
     evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluateSub(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2;
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2), VariablesOut is R2.
+    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, VariablesOut).
