@@ -70,6 +70,9 @@ evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
 
+evaluate(expression(T, sub_op, EX(Term, sub_op, Expr)), VariablesIn, VariablesOut) :-
+evaluate(T, VariablesIn, R1), evaluate(EX(Term, sub_op, Expr), VariablesIn, R2), VariablesOut is R1 - R2.
+
 evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, VariablesOut).
 
@@ -86,7 +89,7 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-    evaluate(IDENT, VariablesIn, IdVar), find_value(IdVar, VariablesOut, VariablesIn). /*här ska man skicka tillbaka IdVars värde*/
+     evaluate(ident(X), VariablesIn, Res), my_member(Res=VariablesOut, VariablesIn).
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
@@ -97,13 +100,11 @@ evaluate(ident(X), VariablesIn, VariablesOut) :-
 evaluate(int(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
 
-built_equality_structure(Id,Value,Id = Value).
+built_equality_structure(Id,Value,Id=Value).
 
-/*gå igenom lista, hitta ids värde*/
 
-find_value(Id, Value, [FirstId = Value]) :- Id = FirstId.
-find_value(Id, Value, [FirstId = Value | Variables]) :- Id = FirstId.
-find_value(Id, Value, [FirstId = FirstValue | Variables]) :- find_value(Id, Value, Variables), Id\=FirstId.
+my_member(X, [X|Xs]).
+my_member(X, [_Y|Xs]):- member(X, Xs).
 
 
 
@@ -113,7 +114,8 @@ find_value(Id, Value, [FirstId = FirstValue | Variables]) :- find_value(Id, Valu
 
 
 
-
+not_member(X, []).
+not_member(X, [Y|Xs]) :- X \= Y, not_member(X, Xs).
 
 
 	
