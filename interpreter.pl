@@ -25,9 +25,8 @@ run(InputFile,OutputFile):-
 /* WRITE YOUR CODE FOR THE PARSER HERE */
 
 
-parse(parse_tree(BL))--> block(BL).
 
-block(block(left_curly, ST, right_curly))-->['{'], stmts(ST), ['}'].
+parse(block(left_curly, ST, right_curly))-->['{'], stmts(ST), ['}'].
 stmts(statements(AS, ST))-->assign(AS), stmts(ST).
 stmts(statements) --> [].
 assign(assignment(ID, assign_op, EX, semicolon))-->id(ID), [=], expr(EX), [;].
@@ -53,10 +52,6 @@ evaluate(+ParseTree,+VariablesIn,-VariablesOut):-
 	the form [var = value, ...].
 ***/
 
-evaluate(parse_tree(BL),VariablesIn,VariablesOut):-
-    evaluate(BL, VariablesIn, Result),
-    VariablesOut = Result.
-
 evaluate(block(left_curly, ST, right_curly), VariablesIn, VariablesOut) :-
     evaluate(ST, VariablesIn, Result),
     VariablesOut = Result.
@@ -72,8 +67,12 @@ evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 + R2.
 
+/* Skicka med en ytterligare parameter med de senaste tecknetna */
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
+
+evaluate(expression(T, sub_op, EX(Term, sub_op, Expr)), VariablesIn, VariablesOut) :-
+evaluate(T, VariablesIn, R1), evaluate(EX(Term, sub_op, Expr), VariablesIn, R2), VariablesOut is R1 - R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, VariablesOut).
@@ -90,14 +89,15 @@ evaluate(term(F), VariablesIn, VariablesOut) :-
 evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
-evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-    evaluate(IDENT, VariablesIn, IdVar), find_value(IdVar, VariablesOut, VariablesIn). /*här ska man skicka tillbaka IdVars värde*/
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
 
 evaluate(ident(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
+
+evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
+find_value(IDENT, VariablesOut, VariablesIn). /*här ska man skicka tillbaka IdVars värde*/
 
 evaluate(int(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
@@ -106,9 +106,8 @@ built_equality_structure(Id,Value,Id = Value).
 
 /*gå igenom lista, hitta ids värde*/
 
-find_value(Id, Value, [FirstId = Value]) :- Id = FirstId.
-find_value(Id, Value, [FirstId = Value | Variables]) :- Id = FirstId.
-find_value(Id, Value, [FirstId = FirstValue | Variables]) :- find_value(Id, Value, Variables), Id\=FirstId.
+find_value(Id, Value, [First|_]) :- my_name_value(First, Id, Value).
+find_value(Id, Value, [_First| Variables]) :- find_value(Id, Value, Variables).
 
 
 
@@ -116,6 +115,11 @@ find_value(Id, Value, [FirstId = FirstValue | Variables]) :- find_value(Id, Valu
 
 
 
+my_name_value(String, Name, Value) :-
+sub_string(String, Before, _, After, "="), !,
+sub_string(String, 0, Before, _, NameString),
+atom_string(Name, NameString),
+sub_string(String, _, After, 0, Value).
 
 
 
