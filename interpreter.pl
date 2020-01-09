@@ -89,6 +89,8 @@ evaluate(term(F), VariablesIn, VariablesOut) :-
 evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
+evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
+     find_value(Res, VariablesOut, VariablesIn), evaluate(IDENT, VariablesIn, Res). /*här ska man skicka tillbaka IdVars värde*/
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
@@ -96,8 +98,6 @@ evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
 evaluate(ident(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
 
-evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-find_value(IDENT, VariablesOut, VariablesIn). /*här ska man skicka tillbaka IdVars värde*/
 
 evaluate(int(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
@@ -106,23 +106,15 @@ built_equality_structure(Id,Value,Id = Value).
 
 /*gå igenom lista, hitta ids värde*/
 
-find_value(Id, Value, [First|_]) :- my_name_value(First, Id, Value).
+find_value(Id, Value, [First|_]) :- functor(Str, First, 0), get_id(Str, Id), get_value(Str, Value).
 find_value(Id, Value, [_First| Variables]) :- find_value(Id, Value, Variables).
 
 
+get_id(String, Result) :-
+sub_atom(String, 0, Len, After, Result), sub_atom(String, Len, 1, AfterEqual, =), After is AfterEqual + 1.
 
-
-
-
-
-my_name_value(String, Name, Value) :-
-sub_string(String, Before, _, After, "="), !,
-sub_string(String, 0, Before, _, NameString),
-atom_string(Name, NameString),
-sub_string(String, _, After, 0, Value).
-
-
-
+get_value(String, Result) :-
+sub_atom(String, Before, Len, 0, Result), sub_atom(String, BeforeEqual, 1, Len, =), Before is BeforeEqual + 1.
 
 
 	
