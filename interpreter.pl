@@ -91,6 +91,9 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
      evaluate(IDENT, VariablesIn, Res).
 
+evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
+    evaluate(IDENT, VariablesIn, Res), not_member(Res=X, VariablesIn), VariablesOut = 0.
+
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
 
@@ -105,12 +108,6 @@ built_equality_structure(Id,Value,Id=Value).
 
 my_member(X, [X|Xs]).
 my_member(X, [_Y|Xs]):- member(X, Xs).
-
-
-
-
-
-
 
 
 
