@@ -89,7 +89,7 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-     evaluate(ident(X), VariablesIn, Res), my_member(Res=VariablesOut, VariablesIn).
+     evaluate(IDENT, VariablesIn, Res), my_member(Res=VariablesOut, VariablesIn).
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
