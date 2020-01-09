@@ -62,7 +62,7 @@ evaluate(statements(AS, ST), VariablesIn, VariablesOut) :-
 evaluate(statements, VariablesIn, VariablesOut).
 
 evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
-    evaluate(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), built_equality_structure(R1, R2, VariablesOut).
+    evaluatear(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), built_equality_structure(R1, R2, VariablesOut).
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 + R2.
@@ -89,16 +89,16 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-     evaluate(IDENT, VariablesIn, Res).
-
-evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-    evaluate(IDENT, VariablesIn, Res), not_member(Res=X, VariablesIn), VariablesOut = 0.
+     evaluate(IDENT, VariablesIn, Res), Res is VariablesOut.
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
 
 evaluate(ident(X), VariablesIn, VariablesOut) :-
-    my_member(X=VariablesOut, VariablesIn); VariablesOut = X.
+    my_member(X=VariablesOut, VariablesIn); not_member(X=_, VariablesIn), VariablesOut = 0.
+
+evaluatear(ident(X), VariablesIn, VariablesOut) :-
+    VariablesOut = X.
 
 evaluate(int(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
