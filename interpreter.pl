@@ -67,7 +67,6 @@ evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 + R2.
 
-/* Skicka med en ytterligare parameter med de senaste tecknetna */
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2), VariablesOut is R1 - R2.
 
@@ -90,7 +89,7 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-     find_value(Res, VariablesOut, VariablesIn), evaluate(IDENT, VariablesIn, Res). /*här ska man skicka tillbaka IdVars värde*/
+     find_value(Res, VariablesOut, VariablesIn), evaluate(IDENT, VariablesIn, Res).
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
@@ -104,7 +103,6 @@ evaluate(int(X), VariablesIn, VariablesOut) :-
 
 built_equality_structure(Id,Value,Id = Value).
 
-/*gå igenom lista, hitta ids värde*/
 
 find_value(Id, Value, [First|_]) :- functor(Str, First, 0), get_id(Str, Id), get_value(Str, Value).
 find_value(Id, Value, [_First| Variables]) :- find_value(Id, Value, Variables).
