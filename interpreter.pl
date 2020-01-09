@@ -89,7 +89,7 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-     find_value(Res, VariablesOut, VariablesIn), evaluate(IDENT, VariablesIn, Res).
+     evaluate(ident(X), VariablesIn, Res), my_member(Res=VariablesOut, VariablesIn).
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
     evaluate(EX, VariablesIn, VariablesOut).
@@ -97,22 +97,25 @@ evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
 evaluate(ident(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
 
-
 evaluate(int(X), VariablesIn, VariablesOut) :-
     VariablesOut = X.
 
-built_equality_structure(Id,Value,Id = Value).
+built_equality_structure(Id,Value,Id=Value).
 
 
-find_value(Id, Value, [First|_]) :- functor(Str, First, 0), get_id(Str, Id), get_value(Str, Value).
-find_value(Id, Value, [_First| Variables]) :- find_value(Id, Value, Variables).
+my_member(X, [X|Xs]).
+my_member(X, [_Y|Xs]):- member(X, Xs).
 
 
-get_id(String, Result) :-
-sub_atom(String, 0, Len, After, Result), sub_atom(String, Len, 1, AfterEqual, =), After is AfterEqual + 1.
 
-get_value(String, Result) :-
-sub_atom(String, Before, Len, 0, Result), sub_atom(String, BeforeEqual, 1, Len, =), Before is BeforeEqual + 1.
+
+
+
+
+
+
+not_member(X, []).
+not_member(X, [Y|Xs]) :- X \= Y, not_member(X, Xs).
 
 
 	
