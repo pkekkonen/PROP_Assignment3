@@ -1,30 +1,15 @@
 /***
-A skeleton for Assignment 3 on PROP HT2019 at DSV/SU.
-Peter Idestam-Almquist, 2019-12-09.
+Paulina Lagebjer Kekkonen (pala7490) and Ida Söderberg (idso0102)
 ***/
 
-/*** 
-Load the tokenizer (tokenize/2) and the filewriter (write_to_file/3).
-***/
 :- [tokenizer].
 :- [filewriter].
-
-
-/***
-The top level predicate run/2 of the solution.
-To be called like this:
-?- run('/Users/paulinakekkonen/Documents/Github/PROP_Assignment3/program2.txt','/Users/paulinakekkonen/Documents/Github/PROP_Assignment3/myparsetree2.txt').
-***/
 
 run(InputFile,OutputFile):-
 	tokenize(InputFile,Program),
 	parse(ParseTree, Program, []),
 	evaluate(ParseTree,[],VariablesOut),
 	write_to_file(OutputFile,ParseTree,VariablesOut).
-
-/* WRITE YOUR CODE FOR THE PARSER HERE */
-
-
 
 parse(block(left_curly, ST, right_curly))-->['{'], stmts(ST), ['}'].
 stmts(statements(AS, ST))-->assign(AS), stmts(ST).
@@ -143,17 +128,8 @@ evaluate(int(X), VariablesIn, VariablesOut) :-
 
 built_equality_structure(Id,Value,Id=Value).
 
-
 my_member(X, [X|Xs]).
 my_member(X, [_Y|Xs]):- member(X, Xs).
-
-
-
-
-
-
-
-
 
 not_member(X, []).
 not_member(X, [Y|Xs]) :- X \= Y, not_member(X, Xs).
