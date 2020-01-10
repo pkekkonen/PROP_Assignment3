@@ -65,29 +65,23 @@ evaluate(assignment(ID, assign_op, EX, semicolon), VariablesIn, VariablesOut) :-
     evaluatear(ID, VariablesIn, R1), evaluate(EX, VariablesIn, R2), built_equality_structure(R1, R2, VariablesOut).
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
-    evaluate(T, VariablesIn, R1), evaluateAdd(EX, VariablesIn, R2, R1), VariablesOut is R2;
-    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1), VariablesOut is R2.
+    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1, 'plus'), VariablesOut is R2.
 
-evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut, ValueSoFar) :-
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluateAdd(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2;
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2.
+evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
+    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'plus'), VariablesOut is R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
-    evaluate(T, VariablesIn, R1), evaluateSub(EX, VariablesIn, R2, R1), VariablesOut is R2;
-    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1), VariablesOut is R2.
+    evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1, 'minus'), VariablesOut is R2.
 
-evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut, ValueSoFar) :-
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluateSub(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2;
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar), VariablesOut is R2.
+evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
+    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'minus'), VariablesOut is R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, VariablesOut).
 
-evaluateSub(expression(T), VariablesIn, VariablesOut, ValueSoFar) :-
-   evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar-Res.
-
-evaluateAdd(expression(T), VariablesIn, VariablesOut, ValueSoFar) :-
-    evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar+Res.
+evaluate(expression(T), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
+    LastOp = 'minus', evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar-Res;
+    LastOp = 'plus', evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar+Res
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
@@ -102,13 +96,14 @@ evaluate(factor(INT), VariablesIn, VariablesOut) :-
     evaluate(INT, VariablesIn, VariablesOut).
 
 evaluate(factor(IDENT), VariablesIn, VariablesOut) :-
-evaluate(IDENT, VariablesIn, Res), Res is VariablesOut.
+    evaluate(IDENT, VariablesIn, Res), Res is VariablesOut.
 
 evaluate(factor(left_paren, EX, right_paren), VariablesIn, VariablesOut) :-
-evaluate(EX, VariablesIn, VariablesOut).
+    evaluate(EX, VariablesIn, VariablesOut).
 
 evaluate(ident(X), VariablesIn, VariablesOut) :-
-my_member(X=VariablesOut, VariablesIn); not_member(X=_, VariablesIn), VariablesOut = 0.
+    my_member(X=VariablesOut, VariablesIn);
+    not_member(X=_, VariablesIn), VariablesOut = 0.
 
 evaluatear(ident(X), VariablesIn, VariablesOut) :-
 VariablesOut = X.
