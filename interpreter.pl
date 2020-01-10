@@ -80,10 +80,10 @@ evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, VariablesOut).
 
 evaluate(expression(T), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
-    evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar+Res, LastOp = 'plus'.
+    LastOp = 'plus', evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar+Res.
 
 evaluate(expression(T), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
-    evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar-Res, LastOp = 'minus'.
+    LastOp = 'minus', evaluate(T, VariablesIn, Res), VariablesOut is ValueSoFar-Res.
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
