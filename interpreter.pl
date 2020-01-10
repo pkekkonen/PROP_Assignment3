@@ -113,7 +113,7 @@ evaluate(term(F, div_op, T), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
 evaluate(term(F), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, VariablesOut).
 
-evaluate(term(F), VariablesIn, VariablesOut) :-
+evaluate(term(F), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
     LastOp = 'plus', evaluate(F, VariablesIn, Res), VariablesOut is ValueSoFar+Res;
     LastOp = 'minus', evaluate(F, VariablesIn, Res), VariablesOut is ValueSoFar-Res;
     LastOp = 'mult', evaluate(F, VariablesIn, Res), VariablesOut is ValueSoFar*Res;
