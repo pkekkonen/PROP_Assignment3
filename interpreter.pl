@@ -68,13 +68,15 @@ evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1, 'plus'), VariablesOut is R2.
 
 evaluate(expression(T, add_op, EX), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'plus'), VariablesOut is R2.
+    LastOp = 'plus', evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'plus'), VariablesOut is R2;
+    LastOp = 'minus', evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'plus'), VariablesOut is R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, R1), evaluate(EX, VariablesIn, R2, R1, 'minus'), VariablesOut is R2.
 
 evaluate(expression(T, sub_op, EX), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
-    evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'minus'), VariablesOut is R2.
+    LastOp = 'plus', evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar + R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'minus'), VariablesOut is R2;
+    LastOp = 'minus', evaluate(T, VariablesIn, R1), NewValuesSoFar is ValueSoFar - R1, evaluate(EX, VariablesIn, R2, NewValuesSoFar, 'minus'), VariablesOut is R2.
 
 evaluate(expression(T), VariablesIn, VariablesOut) :-
     evaluate(T, VariablesIn, VariablesOut).
@@ -85,6 +87,8 @@ evaluate(expression(T), VariablesIn, VariablesOut, ValueSoFar, LastOp) :-
 
 evaluate(term(F, mult_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1*R2.
+
+
 
 evaluate(term(F, div_op, T), VariablesIn, VariablesOut) :-
     evaluate(F, VariablesIn, R1), evaluate(T, VariablesIn, R2), VariablesOut is R1/R2.
